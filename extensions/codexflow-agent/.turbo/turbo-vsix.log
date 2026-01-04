@@ -1,0 +1,67 @@
+ WARN  Unsupported engine: wanted: {"node":"20.19.2"} (current: {"node":"v22.14.0","pnpm":"10.8.1"})
+
+> codexflow-agent@1.0.7 vsix C:\wamp64\www\RooForkVs\src
+> mkdirp ../bin && vsce package --no-dependencies --out ../bin
+
+Executing prepublish script 'npm run vscode:prepublish'...
+
+> codexflow-agent@1.0.7 vscode:prepublish
+> pnpm bundle --production
+
+ WARN  Unsupported engine: wanted: {"node":"20.19.2"} (current: {"node":"v22.14.0","pnpm":"10.8.1"})
+
+> codexflow-agent@1.0.7 bundle C:\wamp64\www\RooForkVs\src
+> node esbuild.mjs "--production"
+
+[extension] Cleaning dist directory: C:\wamp64\www\RooForkVs\src\dist
+[esbuild-problem-matcher#onStart]
+[copyPaths] Copied ../README.md to README.md
+[copyPaths] Copied ../CHANGELOG.md to CHANGELOG.md
+[copyPaths] Copied ../LICENSE to LICENSE
+[copyPaths] Optional file not found: ../.env
+[copyPaths] Copied 911 files from node_modules/vscode-material-icons/generated to assets/vscode-material-icons
+[copyPaths] Copied 3 files from ../webview-ui/audio to webview-ui/audio
+[copyWasms] Copied tiktoken WASMs to C:\wamp64\www\RooForkVs\src\dist
+[copyWasms] Copied tiktoken WASMs to C:\wamp64\www\RooForkVs\src\dist\workers
+[copyWasms] Copied tree-sitter.wasm to C:\wamp64\www\RooForkVs\src\dist
+[copyWasms] Copied 35 tree-sitter language wasms to C:\wamp64\www\RooForkVs\src\dist
+[copyWasms] Copied 4 esbuild-wasm files to C:\wamp64\www\RooForkVs\src\dist
+[copyLocales] Copied 90 locale files to C:\wamp64\www\RooForkVs\src\dist\i18n\locales
+[esbuild-problem-matcher#onEnd]
+ WARNING  This extension consists of 1729 files, out of which 290 are JavaScript files. For performance reasons, you should bundle your extension: https://aka.ms/vscode-bundle-extension. You should also exclude unnecessary files by adding them to your .vscodeignore: https://aka.ms/vscode-vscodeignore.
+
+ INFO  Files included in the VSIX:
+codexflow-agent-1.0.7.vsix
+├─ [Content_Types].xml 
+├─ extension.vsixmanifest 
+└─ extension/
+   ├─ LICENSE.txt [11.27 KB]
+   ├─ changelog.md [166 KB]
+   ├─ package.json [14.44 KB]
+   ├─ package.nls.ca.json [4.6 KB]
+   ├─ package.nls.de.json [4.52 KB]
+   ├─ package.nls.es.json [4.65 KB]
+   ├─ package.nls.fr.json [4.81 KB]
+   ├─ package.nls.hi.json [7.67 KB]
+   ├─ package.nls.id.json [4.28 KB]
+   ├─ package.nls.it.json [4.64 KB]
+   ├─ package.nls.ja.json [5.01 KB]
+   ├─ package.nls.json [4.05 KB]
+   ├─ package.nls.ko.json [4.46 KB]
+   ├─ package.nls.nl.json [4.39 KB]
+   ├─ package.nls.pl.json [4.56 KB]
+   ├─ package.nls.pt-BR.json [4.58 KB]
+   ├─ package.nls.ru.json [6.46 KB]
+   ├─ package.nls.tr.json [4.43 KB]
+   ├─ package.nls.vi.json [5.06 KB]
+   ├─ package.nls.zh-CN.json [3.92 KB]
+   ├─ package.nls.zh-TW.json [3.95 KB]
+   ├─ readme.md [8.91 KB]
+   ├─ assets/ (925 files) [1.45 MB]
+   ├─ dist/ (136 files) [101.21 MB]
+   ├─ integrations/ (8 files) [57.6 KB]
+   └─ webview-ui/ (636 files) [51.73 MB]
+
+=> Run vsce ls --tree to see all included files.
+
+ DONE  Packaged: ..\bin\codexflow-agent-1.0.7.vsix (1729 files, 33.18 MB)

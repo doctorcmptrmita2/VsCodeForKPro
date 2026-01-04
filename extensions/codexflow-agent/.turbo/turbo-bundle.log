@@ -1,0 +1,20 @@
+ WARN  Unsupported engine: wanted: {"node":"20.19.2"} (current: {"node":"v22.14.0","pnpm":"10.8.1"})
+
+> codexflow-agent@1.0.7 bundle C:\wamp64\www\RooForkVs\src
+> node esbuild.mjs
+
+[extension] Cleaning dist directory: C:\wamp64\www\RooForkVs\src\dist
+[esbuild-problem-matcher#onStart]
+[copyPaths] Copied ../README.md to README.md
+[copyPaths] Copied ../CHANGELOG.md to CHANGELOG.md
+[copyPaths] Copied ../LICENSE to LICENSE
+[copyPaths] Optional file not found: ../.env
+[copyPaths] Copied 911 files from node_modules/vscode-material-icons/generated to assets/vscode-material-icons
+[copyPaths] Copied 3 files from ../webview-ui/audio to webview-ui/audio
+[copyWasms] Copied tiktoken WASMs to C:\wamp64\www\RooForkVs\src\dist
+[copyWasms] Copied tiktoken WASMs to C:\wamp64\www\RooForkVs\src\dist\workers
+[copyWasms] Copied tree-sitter.wasm to C:\wamp64\www\RooForkVs\src\dist
+[copyWasms] Copied 35 tree-sitter language wasms to C:\wamp64\www\RooForkVs\src\dist
+[copyWasms] Copied 4 esbuild-wasm files to C:\wamp64\www\RooForkVs\src\dist
+[copyLocales] Copied 90 locale files to C:\wamp64\www\RooForkVs\src\dist\i18n\locales
+[esbuild-problem-matcher#onEnd]

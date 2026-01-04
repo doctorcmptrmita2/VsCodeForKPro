@@ -1,0 +1,293 @@
+name: Build CodexFlow IDE
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      build_arch:
+        description: 'Architecture to build'
+        required: true
+        default: 'x64'
+        type: choice
+        options:
+          - x64
+          - arm64
+          - all
+
+env:
+  NODE_VERSION: '22.x'
+  PYTHON_VERSION: '3.x'
+
+jobs:
+  compile:
+    name: Compile Source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          npm ci
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Compile TypeScript
+        run: npm run gulp compile-build-without-mangling
+
+      - name: Bundle VSCode
+        run: npm run gulp bundle-vscode
+
+      - name: Minify VSCode
+        run: npm run gulp minify-vscode
+
+      - name: Create compilation archive
+        run: |
+          tar -czf compilation.tar.gz out-build out-vscode out-vscode-min .build
+
+      - name: Upload compilation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: compilation
+          path: compilation.tar.gz
+          retention-days: 1
+
+  build-windows:
+    name: Build Windows ${{ matrix.arch }}
+    needs: compile
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64]
+        include:
+          - arch: x64
+            npm_arch: x64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download compilation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: compilation
+
+      - name: Extract compilation
+        run: tar -xzf compilation.tar.gz
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ matrix.npm_arch }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Download Electron
+        run: npm run gulp electron-${{ matrix.arch }}
+
+      - name: Build extensions
+        run: |
+          npm run gulp compile-extensions-build
+          npm run gulp compile-extension-media-build
+
+      - name: Package Windows Client
+        run: npm run gulp vscode-win32-${{ matrix.arch }}-min-ci
+
+      - name: Create ZIP archive
+        run: |
+          $Version = (Get-Content package.json | ConvertFrom-Json).version
+          Compress-Archive -Path "../VSCode-win32-${{ matrix.arch }}/*" -DestinationPath "CodexFlow-win32-${{ matrix.arch }}-$Version.zip"
+        shell: pwsh
+
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: codexflow-win32-${{ matrix.arch }}
+          path: CodexFlow-win32-*.zip
+          retention-days: 30
+
+  build-linux:
+    name: Build Linux ${{ matrix.arch }}
+    needs: compile
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64]
+        include:
+          - arch: x64
+            npm_arch: x64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev
+
+      - name: Download compilation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: compilation
+
+      - name: Extract compilation
+        run: tar -xzf compilation.tar.gz
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ matrix.npm_arch }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Download Electron
+        run: npm run gulp electron-${{ matrix.arch }}
+
+      - name: Build extensions
+        run: |
+          npm run gulp compile-extensions-build
+          npm run gulp compile-extension-media-build
+
+      - name: Package Linux Client
+        run: npm run gulp vscode-linux-${{ matrix.arch }}-min-ci
+
+      - name: Create tarball
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          tar -czf "CodexFlow-linux-${{ matrix.arch }}-$VERSION.tar.gz" -C .. "VSCode-linux-${{ matrix.arch }}"
+
+      - name: Upload Linux Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: codexflow-linux-${{ matrix.arch }}
+          path: CodexFlow-linux-*.tar.gz
+          retention-days: 30
+
+  build-macos:
+    name: Build macOS ${{ matrix.arch }}
+    needs: compile
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [x64]
+        include:
+          - arch: x64
+            npm_arch: x64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Download compilation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: compilation
+
+      - name: Extract compilation
+        run: tar -xzf compilation.tar.gz
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          npm_config_arch: ${{ matrix.npm_arch }}
+          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+      - name: Download Electron
+        run: npm run gulp electron-${{ matrix.arch }}
+
+      - name: Build extensions
+        run: |
+          npm run gulp compile-extensions-build
+          npm run gulp compile-extension-media-build
+
+      - name: Package macOS Client
+        run: npm run gulp vscode-darwin-${{ matrix.arch }}-min-ci
+
+      - name: Create ZIP archive
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          cd ..
+          zip -r "$GITHUB_WORKSPACE/CodexFlow-darwin-${{ matrix.arch }}-$VERSION.zip" "VSCode-darwin-${{ matrix.arch }}"
+
+      - name: Upload macOS Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: codexflow-darwin-${{ matrix.arch }}
+          path: CodexFlow-darwin-*.zip
+          retention-days: 30
+
+  release:
+    name: Create Release
+    needs: [build-windows, build-linux, build-macos]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: codexflow-*
+          merge-multiple: true
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          name: CodexFlow IDE Build ${{ github.run_number }}
+          draft: false
+          prerelease: true
+          files: artifacts/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
