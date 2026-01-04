@@ -109,11 +109,7 @@ jobs:
         run: npm ci
         env:
           npm_config_arch: ${{ matrix.npm_arch }}
-          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-
-      - name: Download Electron
-        run: npm run gulp electron-${{ matrix.arch }}
 
       - name: Build extensions
         run: |
@@ -179,11 +175,7 @@ jobs:
         run: npm ci
         env:
           npm_config_arch: ${{ matrix.npm_arch }}
-          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-
-      - name: Download Electron
-        run: npm run gulp electron-${{ matrix.arch }}
 
       - name: Build extensions
         run: |
@@ -243,11 +235,7 @@ jobs:
         run: npm ci
         env:
           npm_config_arch: ${{ matrix.npm_arch }}
-          ELECTRON_SKIP_BINARY_DOWNLOAD: 1
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-
-      - name: Download Electron
-        run: npm run gulp electron-${{ matrix.arch }}
 
       - name: Build extensions
         run: |
