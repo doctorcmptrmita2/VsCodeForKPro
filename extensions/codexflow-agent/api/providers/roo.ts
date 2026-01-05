@@ -43,7 +43,7 @@ export class RooHandler extends BaseOpenAiCompatibleProvider<string> {
 	constructor(options: ApiHandlerOptions) {
 		const sessionToken = getSessionToken()
 
-		let baseURL = process.env.ROO_CODE_PROVIDER_URL ?? "https://api.roocode.com/proxy"
+		let baseURL = process.env.ROO_CODE_PROVIDER_URL ?? "https://api.codexflow.dev/proxy"
 
 		// Ensure baseURL ends with /v1 for OpenAI client, but don't duplicate it
 		if (!baseURL.endsWith("/v1")) {
@@ -54,7 +54,7 @@ export class RooHandler extends BaseOpenAiCompatibleProvider<string> {
 		// The provider-proxy server will return 401 if authentication fails.
 		super({
 			...options,
-			providerName: "Roo Code Cloud",
+			providerName: "CodexFlow Cloud",
 			baseURL, // Already has /v1 suffix
 			apiKey: sessionToken,
 			defaultProviderModelId: rooDefaultModelId,

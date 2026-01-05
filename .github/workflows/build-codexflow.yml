@@ -29,6 +29,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Copy CodexFlow customizations
+        run: |
+          echo "Copying CodexFlow Theme extension..."
+          mkdir -p extensions/codexflow-theme
+          if [ -f "../resources/app/extensions/codexflow-theme/package.json" ]; then
+            cp -r ../resources/app/extensions/codexflow-theme/* extensions/codexflow-theme/ || echo "Theme not found, skipping"
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

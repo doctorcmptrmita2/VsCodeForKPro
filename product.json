@@ -1,12 +1,12 @@
 {
 	"nameShort": "CodexFlow",
-	"nameLong": "CodexFlow IDE",
+	"nameLong": "CodexFlow IDE - AI Agent & LiteLLM Gateway",
 	"applicationName": "codexflow",
 	"dataFolderName": ".codexflow",
 	"win32MutexName": "codexflow",
 	"licenseName": "MIT",
-	"licenseUrl": "https://github.com/doctorcmptrmita2/VsCodeForKPro/blob/main/LICENSE.txt",
-	"serverLicenseUrl": "https://github.com/doctorcmptrmita2/VsCodeForKPro/blob/main/LICENSE.txt",
+	"licenseUrl": "https://github.com/codexflow/codexflow-ide/blob/main/LICENSE.txt",
+	"serverLicenseUrl": "https://github.com/codexflow/codexflow-ide/blob/main/LICENSE.txt",
 	"serverGreeting": [],
 	"serverLicense": [],
 	"serverLicensePrompt": "",
@@ -29,7 +29,7 @@
 	"darwinProfilePayloadUUID": "CF808BE7-53F3-46C6-A7E2-7EDB98A5E959",
 	"linuxIconName": "codexflow",
 	"licenseFileName": "LICENSE.txt",
-	"reportIssueUrl": "https://github.com/codexflow/codexflow-agent/issues",
+	"reportIssueUrl": "https://github.com/codexflow/codexflow-ide/issues",
 	"nodejsRepository": "https://nodejs.org",
 	"urlProtocol": "codexflow",
 	"webviewContentExternalBaseUrlTemplate": "https://{{uuid}}.vscode-cdn.net/insider/ef65ac1ba57f57f2a3961bfe94aa20481caca4c6/out/vs/workbench/contrib/webview/browser/pre/",
@@ -160,5 +160,25 @@
 		"github-enterprise": [
 			"GitHub.copilot-chat"
 		]
+	},
+	"workbench.colorCustomizations": {
+		"activityBar.background": "#1a1a2e",
+		"activityBar.foreground": "#a78bfa",
+		"activityBar.inactiveForeground": "#6b7280",
+		"activityBarBadge.background": "#8b5cf6",
+		"sideBar.background": "#16213e",
+		"sideBar.foreground": "#e5e7eb",
+		"statusBar.background": "#1e40af",
+		"statusBar.foreground": "#ffffff",
+		"statusBar.noFolderBackground": "#7c3aed",
+		"titleBar.activeBackground": "#1a1a2e",
+		"titleBar.activeForeground": "#a78bfa",
+		"tab.activeBackground": "#1e40af",
+		"tab.activeForeground": "#ffffff",
+		"tab.activeBorder": "#8b5cf6",
+		"editor.background": "#0f172a",
+		"panel.background": "#16213e",
+		"button.background": "#8b5cf6",
+		"focusBorder": "#8b5cf6"
 	}
 }
