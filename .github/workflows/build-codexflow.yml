@@ -18,7 +18,7 @@ on:
           - all
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '22.15.0'
   PYTHON_VERSION: '3.x'
 
 jobs:
@@ -59,8 +59,13 @@ jobs:
           ELECTRON_SKIP_BINARY_DOWNLOAD: 1
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
+      - name: Disable preinstall/postinstall hooks
+        run: |
+          npm pkg delete scripts.preinstall
+          npm pkg delete scripts.postinstall
+
       - name: Compile TypeScript
-        run: npm run gulp compile-build-without-mangling
+        run: npm run gulp compile-build
 
       - name: Bundle VSCode
         run: npm run gulp bundle-vscode
