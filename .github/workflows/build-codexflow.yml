@@ -29,8 +29,18 @@ jobs:
       - name: Extract VS Code
         run: |
           Expand-Archive -Path "vscode-portable.zip" -DestinationPath "." -Force
-          if (Test-Path "VSCode-win32-x64") {
-            Rename-Item "VSCode-win32-x64" "CodexFlow-IDE"
+          
+          # Find the extracted folder (could be VSCode-win32-x64 or similar)
+          $extractedFolder = Get-ChildItem -Directory | Where-Object { $_.Name -like "*Code*" -and $_.Name -notlike ".*" } | Select-Object -First 1
+          
+          if ($extractedFolder) {
+            Write-Host "Found extracted folder: $($extractedFolder.Name)"
+            Rename-Item $extractedFolder.FullName "CodexFlow-IDE"
+            Write-Host "Renamed to CodexFlow-IDE"
+          } else {
+            Write-Host "ERROR: Could not find extracted VS Code folder"
+            Get-ChildItem -Directory | Select-Object Name
+            exit 1
           }
         shell: pwsh
 
