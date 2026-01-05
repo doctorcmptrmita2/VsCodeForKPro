@@ -28,18 +28,32 @@ jobs:
 
       - name: Extract VS Code
         run: |
-          Expand-Archive -Path "vscode-portable.zip" -DestinationPath "." -Force
+          Expand-Archive -Path "vscode-portable.zip" -DestinationPath "vscode-extracted" -Force
           
-          # Find the extracted folder (could be VSCode-win32-x64 or similar)
-          $extractedFolder = Get-ChildItem -Directory | Where-Object { $_.Name -like "*Code*" -and $_.Name -notlike ".*" } | Select-Object -First 1
-          
-          if ($extractedFolder) {
-            Write-Host "Found extracted folder: $($extractedFolder.Name)"
-            Rename-Item $extractedFolder.FullName "CodexFlow-IDE"
-            Write-Host "Renamed to CodexFlow-IDE"
+          # VS Code files are directly in the extracted folder or in a subfolder
+          if (Test-Path "vscode-extracted\Code.exe") {
+            # Files are directly in the folder
+            Rename-Item "vscode-extracted" "CodexFlow-IDE"
+            Write-Host "VS Code extracted directly, renamed to CodexFlow-IDE"
           } else {
-            Write-Host "ERROR: Could not find extracted VS Code folder"
-            Get-ChildItem -Directory | Select-Object Name
+            # Files are in a subfolder
+            $subFolder = Get-ChildItem "vscode-extracted" -Directory | Select-Object -First 1
+            if ($subFolder) {
+              Move-Item $subFolder.FullName "CodexFlow-IDE"
+              Remove-Item "vscode-extracted" -Force
+              Write-Host "VS Code extracted to subfolder, moved to CodexFlow-IDE"
+            } else {
+              Write-Host "ERROR: Could not find VS Code files"
+              Get-ChildItem "vscode-extracted" | Select-Object Name
+              exit 1
+            }
+          }
+          
+          # Verify
+          if (Test-Path "CodexFlow-IDE\Code.exe") {
+            Write-Host "SUCCESS: CodexFlow-IDE folder ready"
+          } else {
+            Write-Host "ERROR: Code.exe not found in CodexFlow-IDE"
             exit 1
           }
         shell: pwsh
